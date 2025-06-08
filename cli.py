@@ -1,15 +1,13 @@
 # Intro project
 
 import os 
-import shutil #
+import shutil
 import sys
 from task_parser import parse_cmd
-from file_ops import resolve_path, move_file
-
-# def parse_command(command: str):
+from file_ops import resolve_path, move_file, copy_file
 
 def main():
-    print("File transfer queue (local mode). Type 'quit', 'q' or 'exit' to exit.")
+    print("File transfer queue (local mode). Type 'quit', 'q' or 'exit' to exit.") 
     while True:
         try:
             cmd = input("> ").strip()
@@ -18,11 +16,13 @@ def main():
 
             task, src, dest = parse_cmd(cmd)
             src = resolve_path(src)
+            print("Source: ", src)
             dest = resolve_path(dest)
+            print("Destination: ", dest)
             if task == "move":
                 move_file(src, dest)
             elif task == "copy":
-                move_file(src, dest)
+                copy_file(src, dest)
         except Exception as e:
             print("Error: ", e)
 
