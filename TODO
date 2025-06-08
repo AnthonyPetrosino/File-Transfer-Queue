@@ -1,5 +1,4 @@
 Install paramiko or equivalent, pyyaml, python-dotenv, rich
 
-Set up file movement on local machine
 Set up local network drives and work on internal file movement
 Set up SFTP file movement

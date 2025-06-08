@@ -1,8 +1,4 @@
 # Intro project
-
-import os 
-import shutil
-import sys
 from task_parser import parse_cmd
 from file_ops import resolve_path, move_file, copy_file
 

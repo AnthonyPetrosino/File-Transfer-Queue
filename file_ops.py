@@ -5,14 +5,15 @@
 # upload: TODO
 
 import os
+import shutil
 
 def resolve_path(path: str):
     return os.path.abspath(path)
 
 def move_file(src, dest):
-    os.rename(src, dest)
-    print("done!")
+    shutil.move(src, dest)
+    print(f"Moved {src} to {dest}")
 
 def copy_file(src, dest):
-    os.system(f"copy {src} {dest}")
-    print("done!")
+    shutil.copy(src, dest)
+    print(f"Copied {src} to {dest}")
