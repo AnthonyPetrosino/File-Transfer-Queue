@@ -1,4 +1,10 @@
-Install paramiko or equivalent, pyyaml, python-dotenv, rich
+Install pyyaml, python-dotenv, rich
 
-Set up local network drives and work on internal file movement
-Set up SFTP file movement
+Custom task scheduler - multithreading to get user input, db to store past commands
+Alter app to comply with sftp file transfer
+Work on ux
+
+Done:
+Create app prototype allowing for file movement on local pc
+Set up local network drives and implement internal to network drive file movement
+Set up SFTP file movement - port 22, uses tcp
