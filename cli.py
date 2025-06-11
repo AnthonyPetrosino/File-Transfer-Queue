@@ -1,11 +1,10 @@
 # Intro project
-# Task Scheduler
+# Task Scheduler: Get task scheduler to run this script at intervals
 import logging
-import threading
-import schedule
+import csv
 from file_ops import run_file_ops
 from task_parser import parse_cmd
-from scheduler import run_scheduler
+from task_manager import new_task, end_task
 
 logging.basicConfig(
     level=logging.INFO,
@@ -13,10 +12,6 @@ logging.basicConfig(
 )
 
 def main():
-
-    # Start the scheduler in a separate thread
-    scheduler_thread = threading.Thread(target=run_scheduler, daemon=True, name="Scheduler")
-    scheduler_thread.start()
 
     print("File transfer queue. Type 'quit', 'q' or 'exit' to exit. Type 'help' for command syntax.")
 
@@ -31,41 +26,51 @@ def main():
             # Check for help command
             if cmd.lower() == "help":
                 print("Available commands:")
-                print("move <src> <dest> - Move file from src to dest")
-                print("copy <src> <dest> - Copy file from src to dest")
+                print("move <src> <dest> - Schedule file move from src to dest")
+                print("copy <src> <dest> - Schedule file copy from src to dest")
+                print("list - List all scheduled tasks")
+                print("clear - Clear all scheduled tasks")
+                print("remove - Remove a specific task")
                 print("Type 'quit', 'q' or 'exit' to exit.")
                 continue
 
+            # List all scheduled tasks
             if cmd.lower() in {"list", "ls"}:
                 print("Listing all scheduled tasks:")
-                jobs = schedule.get_jobs()
-                if not jobs:
-                    print("No tasks scheduled yet.")
-                else:
-                    print("Scheduled tasks:")
-                    for job in jobs:
-                        print(f" - {job}")
+                csv_path = 'tasks.csv'
+                try:
+                    with open(csv_path, mode='r', newline='') as file:
+                        reader = csv.reader(file)
+                        rows = list(reader)
+
+                    if not rows or len(rows) == 1:
+                        print("No tasks scheduled.")
+                    else:
+                        for row in rows[1:]:
+                            print(f"{row[0]} -> {row[1]} {row[2]} {row[3]}")
+                except FileNotFoundError:
+                    print(f"File not found: {csv_path}")
                 continue
 
-            # Parse the command to get task, source, and destination
-            task, src, dest = parse_cmd(cmd)
+            # Clear all tasks
+            if cmd.lower() in {"clear", "cls"}:
+                print("Clearing all tasks...")
+                try:
+                    with open('tasks.csv', mode='w', newline='') as file:
+                        writer = csv.writer(file)
+                        writer.writerow(['Timestamp','Task', 'Source', 'Destination'])  # Reset the file with header
+                    print("All tasks cleared.")
+                except Exception as e:
+                    print(f"Error clearing tasks: {e}")
+                continue
 
-            run_file_ops(task, src, dest)
+            # Remove a specific task
+            if cmd.lower() in {"remove", "rm"}:
+                end_task(cmd)
+                continue
 
-            # Schedule the task            
-
-            # Prompt user for interval
-            # print("How often should the task be executed (in minutes)?")
-            # interval = input(cmd + "> ")
-            # while not interval.isdigit() or int(interval) <= 0:
-            #     print("Please enter a valid integer number for the interval.")
-            #     interval = input(cmd + "> ")
-            #     if interval.lower() in {"quit", "q", "exit"}:
-            #         return
-
-            # schedule.every(int(interval)).minutes.do(run_file_ops, task=task, src=src, dest=dest)
-            # logging.info(f"Scheduled task: {cmd} to run every {interval} minute(s).")
-            # print(f"Task '{cmd}' scheduled to run every {interval} minute(s).")
+            # Add a new task
+            new_task(cmd)
 
         except (KeyboardInterrupt, EOFError):
             print("Shutdown initiated by user (Ctrl+C or Ctrl+D).")
