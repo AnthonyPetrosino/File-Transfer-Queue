@@ -1,5 +1,5 @@
 # Intro project
-# Multithreading branch: edit comments to allow for scheduling entirely within app.
+# Task scheduler
 import logging
 import threading
 import schedule
