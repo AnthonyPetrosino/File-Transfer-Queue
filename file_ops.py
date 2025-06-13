@@ -6,9 +6,10 @@
 
 import os
 import shutil
+import time
 
 # Parse and execute a file operation
-def run_file_ops(task, src, dest):
+def run_file_ops(task, src, dest, task_number):
     try:
         # Resolve the file paths
         src = resolve_path(src)
@@ -21,7 +22,8 @@ def run_file_ops(task, src, dest):
         elif task == "copy":
             copy_file(src, dest)
     except Exception as e:
-        print(f"Failed to execute task '{task} {src} {dest}'. Error: {e}")
+        print(f"\nFailed to execute task #{task_number}:\n{task} {src} {dest}\nError: {e}\n")
+        time.sleep(5)
 
 # Resolve the file paths
 def resolve_path(path: str):
