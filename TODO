@@ -1,7 +1,6 @@
-Install pyyaml, python-dotenv, rich
-
+TODO:
 Set up SFTP file movement - port 22, uses tcp
-Work on ux
+Work on ux - Tkinter
 
 Done:
 Create app prototype allowing for file movement on local pc
