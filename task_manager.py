@@ -1,29 +1,24 @@
 import csv
 import os
 from datetime import datetime
-from task_parser import parse_cmd
 
 def create_task(cmd):
-    # Parse the command to get task, source, and destination
-    task, src, dest = parse_cmd(cmd)
-
     # Record the current timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     # Create the tasks.csv file if it does not exist
     if not os.path.exists('localtasks.csv'):
         writer = csv.writer(open('localtasks.csv', mode='w', newline=''))
-        writer.writerow(['Timestamp', 'Task', 'Source', 'Destination'])
+        writer.writerow(['Timestamp', 'Command'])
 
     # Create a new task entry
-    with open('localtasks.csv', mode='a', newline='') as file:
-        writer = csv.writer(file)
-        if file.tell() == 0:
-            # Write header if file is empty
-            writer.writerow(['Timestamp','Task', 'Source', 'Destination'])
-        writer.writerow([timestamp,task, src, dest])
+    writer = csv.writer(open('localtasks.csv', mode='a', newline=''))
+    if open('localtasks.csv', mode='a', newline='').tell() == 0:
+        # Write header if file is empty
+        writer.writerow(['Timestamp','Command'])
+    writer.writerow([timestamp, cmd])
 
-        print("New task added: ", task, src, dest)
+    print(f"New task added: {cmd}")
 
 def remove_task(cmd):
     print("Removing a task...")
@@ -51,6 +46,9 @@ def remove_task(cmd):
             print("Task removed successfully.")
         else:
             print("Invalid task number.")
+            
+    except FileNotFoundError:
+        print("No localtasks.csv file found. Please create a task first.")
     except Exception as e:
         print(f"Error removing task: {e}")
     return

@@ -24,9 +24,13 @@ def main():
                 return
 
             for task_number, row in enumerate(rows[1:], start=1):
-                print(f"Executing task # {task_number}: {row[0]} -> {row[1]} {row[2]} {row[3]}")
-                task, src, dest = parse_cmd(row[1] + " " + row[2] + " " + row[3])
-                run_file_ops(task, src, dest, task_number)
+                cmd_str = row[1]
+                try:
+                    task, *args = parse_cmd(cmd_str)
+                    run_file_ops(task, *args, task_number)
+                except ValueError as e:
+                    print(f"Skipping invalid task #{task_number}: '{cmd_str}'. {e}")
+                    time.sleep(5)
                 time.sleep(0.1)  # Sleep to simulate task execution time
 
         except FileNotFoundError:
@@ -47,8 +51,10 @@ def main():
                     print("Exit command received. Shutting down.")
                     break
 
+                cmd_word = cmd.split()[0].lower() 
+
                 # Check for help command
-                if cmd.lower() in {"help", "h", "?"}:
+                if cmd_word in {"help", "h", "?"}:
                     print("Available commands:")
                     print("sftp <upload/download> <local_path> <user>@<host>:<password>:<remote_path> - Schedule SFTP transfer")
                     print("<move/copy> <src> <dest> - Schedule local file move/copy from src to dest")
@@ -59,7 +65,7 @@ def main():
                     continue
 
                 # List all scheduled tasks
-                if cmd.lower() in {"list", "ls"}:
+                if cmd_word in {"list", "ls"}:
                     print("Listing all scheduled tasks:")
                     try:
                         reader = csv.reader(open('localtasks.csv', mode='r', newline=''))
@@ -69,13 +75,13 @@ def main():
                             print("No tasks scheduled.")
                         else:
                             for task_number, row in enumerate(rows[1:], start=1):
-                                print(f"{task_number}: {row[0]} -> {row[1]} {row[2]} {row[3]}")
+                                print(f"{task_number}: {row[0]} -> {row[1]}")
                     except FileNotFoundError:
                         print(f"File not found: 'localtasks.csv'")
                     continue
 
                 # Clear all tasks
-                if cmd.lower() in {"clear", "cls"}:
+                if cmd_word in {"clear", "cls"}:
                     confirmation = input("This will clear all tasks. Are you sure? (yes/no) ").strip().lower()
                     if confirmation != 'yes' and confirmation != 'y':
                         print("Clear operation cancelled.")
@@ -90,13 +96,17 @@ def main():
                     continue
 
                 # Remove a specific task
-                if cmd.lower() in {"remove", "rm"}:
+                if cmd_word in {"remove", "rm"}:
                     remove_task(cmd)
                     continue
 
                 # Add a new task
-                create_task(cmd)
-
+                try: 
+                    parse_cmd(cmd)  # Validate the command
+                    create_task(cmd)  # Create the task
+                except ValueError as e:
+                    print(f"Error: {e}")
+                    
             except (KeyboardInterrupt, EOFError):
                 print("Shutdown initiated by user (Ctrl+C or Ctrl+D).")
                 break
