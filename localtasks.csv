@@ -1,4 +1,5 @@
 Timestamp,Command
-2025-06-15 23:50,move t1 t
-2025-06-15 23:50,move t t1
-2025-06-15 23:50,copy faketest faketest
+2025-06-16 00:44,move test.txt test1.txt
+2025-06-16 00:44,copy test1.txt test.txt
+2025-06-16 00:52,sftp upload test.txt sftpuser@exampleip:examplepwd:/uploads/test2.txt
+2025-06-16 01:13,sftp download test2.txt sftpuser@exampleip:examplepwd:/uploads/test2.txt

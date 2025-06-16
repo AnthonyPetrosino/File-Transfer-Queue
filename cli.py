@@ -57,7 +57,7 @@ def main():
                 if cmd_word in {"help", "h", "?"}:
                     print("Available commands:")
                     print("sftp <upload/download> <local_path> <user>@<host>:<password>:<remote_path> - Schedule SFTP transfer")
-                    print("<move/copy> <src> <dest> - Schedule local file move/copy from src to dest")
+                    print("move/copy <src> <dest> - Schedule local file move/copy from src to dest")
                     print("list - List all scheduled tasks")
                     print("clear - Clear all scheduled tasks")
                     print("remove - Remove a specific task")

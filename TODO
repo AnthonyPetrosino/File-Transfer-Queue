@@ -1,8 +1,8 @@
 TODO:
-Set up SFTP file movement using paramiko (low-level functionality of ssh) - port 22, uses tcp
 Work on ux - Tkinter
 
 Done:
 Create app prototype allowing for file movement on local pc
 Set up local network drives and implement internal to network drive file movement
 Integrate task scheduler to automatically execute listed tasks
+Set up SFTP file movement using paramiko (low-level functionality of ssh) - port 22, uses tcp

@@ -34,7 +34,7 @@ def remove_task(cmd):
         # Display tasks for selection
         print("Select a task to remove (by number):")
         for i, row in enumerate(rows[1:], start=1):
-            print(f"{i}: {row[0]} -> {row[1]} {row[2]} {row[3]}")
+            print(f"{i}: {row[0]} -> {row[1]}")
 
         # Get user input for task number
         task_num = int(input("Enter task number to remove: ")) - 1
@@ -46,7 +46,7 @@ def remove_task(cmd):
             print("Task removed successfully.")
         else:
             print("Invalid task number.")
-            
+
     except FileNotFoundError:
         print("No localtasks.csv file found. Please create a task first.")
     except Exception as e:
