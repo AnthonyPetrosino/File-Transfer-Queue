@@ -1,16 +1,22 @@
 import csv
+import os
 from datetime import datetime
 from task_parser import parse_cmd
 
-def new_task(cmd):
+def create_task(cmd):
     # Parse the command to get task, source, and destination
     task, src, dest = parse_cmd(cmd)
 
     # Record the current timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
 
+    # Create the tasks.csv file if it does not exist
+    if not os.path.exists('localtasks.csv'):
+        writer = csv.writer(open('localtasks.csv', mode='w', newline=''))
+        writer.writerow(['Timestamp', 'Task', 'Source', 'Destination'])
+
     # Create a new task entry
-    with open('tasks.csv', mode='a', newline='') as file:
+    with open('localtasks.csv', mode='a', newline='') as file:
         writer = csv.writer(file)
         if file.tell() == 0:
             # Write header if file is empty
@@ -19,13 +25,12 @@ def new_task(cmd):
 
         print("New task added: ", task, src, dest)
 
-def end_task(cmd):
+def remove_task(cmd):
     print("Removing a task...")
     try:
         # Read the existing tasks
-        with open('tasks.csv', mode='r', newline='') as file:
-            reader = csv.reader(file)
-            rows = list(reader)
+        reader = csv.reader(open('localtasks.csv', mode='r', newline=''))
+        rows = list(reader)
 
         if len(rows) <= 1:
             print("No tasks to remove.")
@@ -41,9 +46,8 @@ def end_task(cmd):
 
         if 0 <= task_num < len(rows) - 1:
             del rows[task_num + 1]  # +1 because of header row
-            with open('tasks.csv', mode='w', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerows(rows)
+            writer = csv.writer(open('localtasks.csv', mode='w', newline=''))
+            writer.writerows(rows)
             print("Task removed successfully.")
         else:
             print("Invalid task number.")

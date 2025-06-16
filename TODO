@@ -1,5 +1,5 @@
 TODO:
-Set up SFTP file movement - port 22, uses tcp
+Set up SFTP file movement using paramiko (low-level functionality of ssh) - port 22, uses tcp
 Work on ux - Tkinter
 
 Done:

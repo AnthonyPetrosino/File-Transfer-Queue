@@ -1,17 +1,11 @@
 # Intro project
 # Task Scheduler: Get task scheduler to run this script at intervals
-import logging
 import csv
 import sys
 import time
 from file_ops import run_file_ops
 from task_parser import parse_cmd
-from task_manager import new_task, end_task
-
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(threadName)s - %(message)s'
-)
+from task_manager import create_task, remove_task
 
 def main():
 
@@ -21,7 +15,7 @@ def main():
 
         # Read and execute tasks from the CSV file
         try:
-            with open('tasks.csv', mode='r', newline='') as file:
+            with open('localtasks.csv', mode='r', newline='') as file:
                 reader = csv.reader(file)
                 rows = list(reader)
 
@@ -36,7 +30,7 @@ def main():
                 time.sleep(0.1)  # Sleep to simulate task execution time
 
         except FileNotFoundError:
-            print("Unable to locate tasks.csv. Please ensure it exists.")
+            print("Unable to locate localtasks.csv. Please ensure it exists.")
             time.sleep(5)
 
         print("Task execution completed. Exiting.")
@@ -45,20 +39,19 @@ def main():
 
     else:
         print("File transfer queue. Type 'quit', 'q' or 'exit' to exit. Type 'help' for command syntax.")
-
         while True:
             try:
                 # Prompt user for command
                 cmd = input("> ").strip()
-                if cmd.lower() in {"quit", "q", "exit"}:
-                    logging.info("Exit command received. Shutting down.")
+                if cmd.lower() in {"quit", "q", "exit", "bye"}:
+                    print("Exit command received. Shutting down.")
                     break
 
                 # Check for help command
-                if cmd.lower() == "help":
+                if cmd.lower() in {"help", "h", "?"}:
                     print("Available commands:")
-                    print("move <src> <dest> - Schedule file move from src to dest")
-                    print("copy <src> <dest> - Schedule file copy from src to dest")
+                    print("sftp <upload/download> <local_path> <user>@<host>:<password>:<remote_path> - Schedule SFTP transfer")
+                    print("<move/copy> <src> <dest> - Schedule local file move/copy from src to dest")
                     print("list - List all scheduled tasks")
                     print("clear - Clear all scheduled tasks")
                     print("remove - Remove a specific task")
@@ -68,11 +61,9 @@ def main():
                 # List all scheduled tasks
                 if cmd.lower() in {"list", "ls"}:
                     print("Listing all scheduled tasks:")
-                    csv_path = 'tasks.csv'
                     try:
-                        with open(csv_path, mode='r', newline='') as file:
-                            reader = csv.reader(file)
-                            rows = list(reader)
+                        reader = csv.reader(open('localtasks.csv', mode='r', newline=''))
+                        rows = list(reader)
 
                         if not rows or len(rows) == 1:
                             print("No tasks scheduled.")
@@ -80,16 +71,19 @@ def main():
                             for task_number, row in enumerate(rows[1:], start=1):
                                 print(f"{task_number}: {row[0]} -> {row[1]} {row[2]} {row[3]}")
                     except FileNotFoundError:
-                        print(f"File not found: {csv_path}")
+                        print(f"File not found: 'localtasks.csv'")
                     continue
 
                 # Clear all tasks
                 if cmd.lower() in {"clear", "cls"}:
+                    confirmation = input("This will clear all tasks. Are you sure? (yes/no) ").strip().lower()
+                    if confirmation != 'yes' and confirmation != 'y':
+                        print("Clear operation cancelled.")
+                        continue
                     print("Clearing all tasks...")
                     try:
-                        with open('tasks.csv', mode='w', newline='') as file:
-                            writer = csv.writer(file)
-                            writer.writerow(['Timestamp','Task', 'Source', 'Destination'])  # Reset the file with header
+                        writer = csv.writer(open('localtasks.csv', mode='w', newline=''))
+                        writer.writerow(['Timestamp','Task', 'Source', 'Destination'])  # Reset the file with header
                         print("All tasks cleared.")
                     except Exception as e:
                         print(f"Error clearing tasks: {e}")
@@ -97,11 +91,11 @@ def main():
 
                 # Remove a specific task
                 if cmd.lower() in {"remove", "rm"}:
-                    end_task(cmd)
+                    remove_task(cmd)
                     continue
 
                 # Add a new task
-                new_task(cmd)
+                create_task(cmd)
 
             except (KeyboardInterrupt, EOFError):
                 print("Shutdown initiated by user (Ctrl+C or Ctrl+D).")
