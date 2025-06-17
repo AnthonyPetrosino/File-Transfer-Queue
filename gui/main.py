@@ -20,7 +20,7 @@ def main():
             return
 
         # Interactive command line mode
-        elif sys.argv[0] == 'cli.py' and len(sys.argv) == 1:
+        elif sys.argv[0] == 'main.py' and len(sys.argv) == 1:
             print("File transfer queue. Type 'quit', 'q' or 'exit' to exit. Type 'help' for command syntax.")
             while True:
                 try:
@@ -97,9 +97,9 @@ def main():
                 except Exception as e:
                     print("Error in the main loop: ", e)
         else: 
-            print("Error: Valid arguments are cli.py and cli.py 1")
+            print("Error: Valid arguments are main.py and main.py 1")
     except Exception as e:
-        print("Error: Valid arguments are cli.py and cli.py 1")
+        print("Error: Valid arguments are main.py and main.py 1")
 
 if __name__ == "__main__":
     main()
