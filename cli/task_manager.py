@@ -61,14 +61,15 @@ def remove_task(cmd):
     return
 
 def check_sftp(cmd):
-    # try: TODO
+    try:
         if len(cmd.split()) == 1:
             return 'localtasks.csv'
         elif len(cmd.split()) == 2:
             if cmd.split()[1].lower() == 'sftp':
                 return 'sftptasks.csv'
             else:
-                return "Invalid command. Type 'help' for command syntax." 
+                raise Exception() 
         else:
-            return "Invalid command. Type 'help' for command syntax."
-    # except
+            raise Exception()
+    except Exception as e:
+        raise ValueError(f"Invalid ls command format. Type 'help' for command syntax.")
