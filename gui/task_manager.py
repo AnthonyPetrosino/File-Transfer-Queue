@@ -26,9 +26,9 @@ def create_task(cmd):
 
     print(f"New task added: {cmd}")
 
-def remove_task(cmd):
-    filename = check_sftp(cmd)
-    print("Removing a task...")
+def remove_task(task_num, filename):
+    # filename = check_sftp(cmd)
+    # print("Removing a task...")
     try:
         # Read the existing tasks
         reader = csv.reader(open(filename, mode='r', newline=''))
@@ -39,12 +39,12 @@ def remove_task(cmd):
             return
 
         # Display tasks for selection
-        print("Select a task to remove (by number):")
-        for i, row in enumerate(rows[1:], start=1):
-            print(f"{i}: {row[0]} -> {row[1]}")
+        # print("Select a task to remove (by number):")
+        # for i, row in enumerate(rows[1:], start=1):
+        #     print(f"{i}: {row[0]} -> {row[1]}")
 
-        # Get user input for task number
-        task_num = int(input("Enter task number to remove: ")) - 1
+        # # Get user input for task number
+        # task_num = int(input("Enter task number to remove: ")) - 1
 
         if 0 <= task_num < len(rows) - 1:
             del rows[task_num + 1]  # +1 because of header row
