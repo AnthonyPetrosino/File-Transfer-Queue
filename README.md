@@ -6,7 +6,7 @@ There are two primary ways to run this application.
 
 ## 1. Interactive Terminal Mode
 * This mode allows you to add, list, and manage file transfer tasks in real-time.
-* Open your terminal, navigate to the project directory, and run the following command: python cli.py
+* Open your terminal, navigate to the cli directory within the project, and run the following command: python cli.py
 * The application will start and display a > prompt, waiting for your commands.
 
 ## 2. Execution Mode
