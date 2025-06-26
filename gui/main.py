@@ -4,7 +4,7 @@ import csv
 import sys
 import time
 from task_parser import parse_cmd
-from task_manager import create_task, remove_task, check_sftp
+from task_manager import create_task, remove_task
 from task_executor import execute_scheduled_tasks
 from gui import start_gui
 

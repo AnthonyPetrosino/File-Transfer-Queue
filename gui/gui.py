@@ -1,6 +1,6 @@
 from tkinter import *
 from button_functions import show_csv, remove_task_btn, clear_csv_btn, execute_csv_btn, open_source_file, open_destination_folder
-from task_manager import create_task, remove_task, check_sftp
+from task_manager import create_task, remove_task
 
 root = Tk() # Instantiate the main window
 
@@ -26,9 +26,7 @@ def start_gui():
     csv_dropdown = OptionMenu(root, selected_csv, "localtasks.csv", "sftptasks.csv", command=lambda value:show_csv(root, value)) # Create a dropdown menu for selecting CSV files
     csv_dropdown.grid(row=2, column=0, padx=10, pady=10) # Place the dropdown in the grid layout 
 
-    # selected_command = StringVar() # Create a StringVar to hold the selected command
-    # selected_command.set("Selected Command") # Set the default value for the dropdown menu
-    remove_button = Button(root, command=lambda:remove_task_btn(root), text="Remove", bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to remove tasks
+    remove_button = Button(root, command=lambda:remove_task_btn(root, selected_csv.get()), text="Remove", bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to remove tasks
     remove_button.grid(row=2, column=1, padx=10, pady=10) # Place the button in the grid layout
 
     clear_button = Button(root, command=lambda:clear_csv_btn(root), text="Clear", bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to clear tasks

@@ -1,12 +1,12 @@
 from tkinter import *
 from tkinter.ttk import Treeview
 from tkinter import filedialog
-from task_manager import create_task, remove_task, check_sftp
+from task_manager import create_task, remove_task
 
-def show_csv(root, selected_file):
+def show_csv(root, selected_csv_file):
     # Function to display the selected CSV file
     try:
-        with open(selected_file, 'r') as file: 
+        with open(selected_csv_file, 'r') as file: 
             content = file.read()
 
             # Clear previous content
@@ -16,12 +16,13 @@ def show_csv(root, selected_file):
 
             csv_tree = Treeview(root)
             csv_tree['columns'] = ('ID', 'Timestamp', 'Command') # Define the columns
+            csv_tree.column("#0", width=0, stretch=NO) # Hide the default first column
             csv_tree.column("ID", width=50, anchor=W)
             csv_tree.column("Timestamp", width=150, anchor=W)
             csv_tree.column("Command", width=400, anchor=CENTER)
-
-            # Insert the content into the Treeview
-            csv_tree.insert(parent="", index="end", values=("ID", "Timestamp", "Command")) # Add a header row
+            csv_tree.heading("ID", text="ID", anchor=W)
+            csv_tree.heading("Timestamp", text="Timestamp", anchor=W)
+            csv_tree.heading("Command", text="Command", anchor=W)
 
             # Populate the Treeview with the csv content
             for i, line in enumerate(content.splitlines()):
@@ -29,33 +30,47 @@ def show_csv(root, selected_file):
                     continue  # Skip csv header
                 try:
                     timestamp, command = line.split(",", 1)
-                    csv_tree.insert("", "end", text=str(i), values=(i, timestamp.strip(), command.strip()))
+                    csv_tree.insert("", "end", iid=str(i), values=(i, timestamp.strip(), command.strip()))
                 except ValueError:
                     continue
 
-            csv_tree.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+            csv_tree.grid(row=4, column=0, columnspan=5, padx=10, pady=10)
+            root.csv_tree = csv_tree # Store the treeview in root for access by other functions
 
-            if selected_file == "localtasks.csv":
+            if selected_csv_file == "localtasks.csv":
                         move_button = Button(root, text="Move", command=lambda:move_file(root), bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to move files
                         move_button.grid(row=8, column=0, padx=10, pady=10)
                         copy_button = Button(root, text="Copy", command=lambda:copy_file(root), bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to copy files
                         copy_button.grid(row=8, column=1, padx=10, pady=10)
-            elif selected_file == "sftptasks.csv":
+            elif selected_csv_file == "sftptasks.csv":
                         download_button = Button(root, text="Download", command=lambda:download_file(root), bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to download files
                         download_button.grid(row=8, column=0, padx=10, pady=10)
                         upload_button = Button(root, text="Upload", command=lambda:upload_file(root), bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to upload files
                         upload_button.grid(row=8, column=1, padx=10, pady=10)
 
     except FileNotFoundError:
-        error_label = Label(root, text=f"Error: {selected_file} not found.", bg='white', fg="#ba0e0e", font=("Arial", 14))
+        error_label = Label(root, text=f"Error: {selected_csv_file} not found.", bg='white', fg="#ba0e0e", font=("Arial", 14))
         error_label.grid(row=3, column=0, columnspan=5, padx=10, pady=10) # Place the label in the grid layout
 
-def remove_task_btn(root):
+def remove_task_btn(root, selected_csv_file):
     # Function to remove a task from the queue
-    remove_task_result = Label(root, text="Remove functionality not implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    remove_task_result.grid(row=3, column=0, padx=10, pady=10) # Place the label in the grid layout
-    
-    # remove_task(task_num, filename)
+    if hasattr(root, 'csv_tree'):
+        selected_item = root.csv_tree.selection() # Retrieve the tree's item identifier (row id)
+        if selected_item:
+            task_id = int(root.csv_tree.item(selected_item[0])['values'][0])
+            remove_task(root, task_id - 1, selected_csv_file) # Call remove function
+            show_csv(root, selected_csv_file) # Refresh the Treeview
+            remove_task_result = Label(root, text=f"Task {task_id} removed from {selected_csv_file}.", bg='white', fg='#ba0e0e', font=("Arial", 14))
+            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+        else:
+            for widget in root.grid_slaves(): # Clear previous messages
+                if widget.grid_info()["row"] == 3:
+                    widget.destroy()
+            remove_task_result = Label(root, text="No task selected to remove.", bg='white', fg="#ba0e0e", font=("Arial", 14))
+            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+    else:
+        remove_task_result = Label(root, text="CSV not displayed.", bg='white', fg="#ba0e0e", font=("Arial", 14))
+        remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)  
 
 def clear_csv_btn(root):
     # Function to clear tasks in csv
