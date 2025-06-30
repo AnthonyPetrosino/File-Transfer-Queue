@@ -1,6 +1,7 @@
+import csv
 from tkinter import *
 from tkinter.ttk import Treeview
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from task_manager import create_task, remove_task
 
 def show_csv(root, selected_csv_file):
@@ -14,7 +15,16 @@ def show_csv(root, selected_csv_file):
                 if isinstance(widget, Label) and widget.grid_info()['row'] == 3:
                     widget.destroy()
 
-            csv_tree = Treeview(root)
+            tree_frame = Frame(root)
+            tree_frame.grid(row=4, column=0, columnspan=5, padx=10, pady=10, sticky="nsew")
+
+            # Vertical scrollbar
+            scrollbar = Scrollbar(tree_frame)
+            scrollbar.pack(side=RIGHT, fill=Y)
+
+            csv_tree = Treeview(tree_frame, yscrollcommand=scrollbar.set)
+            scrollbar.config(command=csv_tree.yview)
+
             csv_tree['columns'] = ('ID', 'Timestamp', 'Command') # Define the columns
             csv_tree.column("#0", width=0, stretch=NO) # Hide the default first column
             csv_tree.column("ID", width=50, anchor=W)
@@ -34,7 +44,7 @@ def show_csv(root, selected_csv_file):
                 except ValueError:
                     continue
 
-            csv_tree.grid(row=4, column=0, columnspan=5, padx=10, pady=10)
+            csv_tree.pack(side=LEFT, fill=BOTH, expand=True)
             root.csv_tree = csv_tree # Store the treeview in root for access by other functions
 
             if selected_csv_file == "localtasks.csv":
@@ -49,8 +59,7 @@ def show_csv(root, selected_csv_file):
                         upload_button.grid(row=8, column=1, padx=10, pady=10)
 
     except FileNotFoundError:
-        error_label = Label(root, text=f"Error: {selected_csv_file} not found.", bg='white', fg="#ba0e0e", font=("Arial", 14))
-        error_label.grid(row=3, column=0, columnspan=5, padx=10, pady=10) # Place the label in the grid layout
+        root.log_output(f"Error: {selected_csv_file} not found.")
 
 def remove_task_btn(root, selected_csv_file):
     # Function to remove a task from the queue
@@ -60,27 +69,37 @@ def remove_task_btn(root, selected_csv_file):
             task_id = int(root.csv_tree.item(selected_item[0])['values'][0])
             remove_task(root, task_id - 1, selected_csv_file) # Call remove function
             show_csv(root, selected_csv_file) # Refresh the Treeview
-            remove_task_result = Label(root, text=f"Task {task_id} removed from {selected_csv_file}.", bg='white', fg='#ba0e0e', font=("Arial", 14))
-            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+            root.log_output(f"Successfully removed task number {task_id}.")
         else:
-            for widget in root.grid_slaves(): # Clear previous messages
-                if widget.grid_info()["row"] == 3:
-                    widget.destroy()
-            remove_task_result = Label(root, text="No task selected to remove.", bg='white', fg="#ba0e0e", font=("Arial", 14))
-            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+            root.log_output("No task selected to remove.")
     else:
         remove_task_result = Label(root, text="CSV not displayed.", bg='white', fg="#ba0e0e", font=("Arial", 14))
         remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)  
 
 def clear_csv_btn(root):
     # Function to clear tasks in csv
-    clear_csv_result = Label(root, text="Clear Functionality Not Implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    clear_csv_result.grid(row=3, column=0, padx=10, pady=10) # Place the label in the grid layout
+    if hasattr(root, 'csv_tree'):
+        current_file = root.selected_csv.get() if hasattr(root, 'selected_csv') else "localtasks.csv"
+        confirm = messagebox.askyesno("Confirm Clear", f"This will clear all tasks in {current_file}. Are you sure?")
+        if not confirm:
+            root.log_output("Clear operation cancelled.")
+            return
+
+        try:
+            with open(current_file, mode='w', newline='') as file:
+                writer = csv.writer(file)
+                writer.writerow(['Timestamp', 'Command'])  # Write header only
+            show_csv(root, current_file)  # Refresh the view
+            root.log_output(f"All tasks in {current_file} cleared.")
+        except Exception as e:
+            root.log_output(f"Error clearing tasks: {e}")
+    else:
+        root.log_output("No CSV file loaded to clear.")
 
 def execute_csv_btn(root):
     # Function to add a task to the queue
-    execute_csv_result = Label(root, text="Execute Functionality Not Implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    execute_csv_result.grid(row=3, column=0, padx=10, pady=10) # Place the label in the grid layout
+    root.log_output("Execute functionality not implemented.")
+
 
 def open_source_file(root):
     # Function to open the source file path
@@ -96,20 +115,19 @@ def open_destination_folder(root):
 
 def move_file(root):
     # Function to move a file
-    move_file_result = Label(root, text="Move functionality not implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    move_file_result.grid(row=3, column=4, padx=10, pady=10) # Place the label in the grid layout
+    root.log_output("Move functionality not implemented.")
+
 
 def copy_file(root):
     # Function to copy a file
-    copy_file_result = Label(root, text="Copy functionality not implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    copy_file_result.grid(row=3, column=0, padx=10, pady=10) # Place the label in the grid layout
+    root.log_output("Copy functionality not implemented.")
+
 
 def download_file(root):
     # Function to download a file
-    download_file_result = Label(root, text="Download functionality not implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    download_file_result.grid(row=3, column=0, padx=10, pady=10) # Place the label in the grid layout
+    root.log_output("Download functionality not implemented.")
+
 
 def upload_file(root):
     # Function to upload a file
-    upload_file_result = Label(root, text="Upload functionality not implemented", bg='white', fg="#ba0e0e", font=("Arial", 14))
-    upload_file_result.grid(row=3, column=0, padx=10, pady=10) # Place the label in the grid layout
+    root.log_output("Upload functionality not implemented.")

@@ -5,7 +5,7 @@ from task_manager import create_task, remove_task
 root = Tk() # Instantiate the main window
 
 def start_gui():
-    root.geometry("850x600") # Set the size of the window
+    root.geometry("850x700") # Set the size of the window
     root.title("File Transfer Queue GUI") # Set the title of the window
 
     logo = PhotoImage(file='images/leaderbank_logo.png') # Load logo image
@@ -21,7 +21,8 @@ def start_gui():
     header.grid(row=0, column=0, rowspan=2, columnspan=2, padx=10, pady=10) # Use grid layout for the label 
 
     selected_csv = StringVar() # Create a StringVar to hold the selected CSV file
-    selected_csv.set("Select csv") # Set the default value for the dropdown menu
+    selected_csv.set("localtasks.csv") # Set the default value for the dropdown menu
+    root.selected_csv = selected_csv
     show_csv(root, "localtasks.csv") # Show the content of the default CSV file
     csv_dropdown = OptionMenu(root, selected_csv, "localtasks.csv", "sftptasks.csv", command=lambda value:show_csv(root, value)) # Create a dropdown menu for selecting CSV files
     csv_dropdown.grid(row=2, column=0, padx=10, pady=10) # Place the dropdown in the grid layout 
@@ -33,12 +34,35 @@ def start_gui():
     clear_button.grid(row=2, column=2, padx=10, pady=10) # Place the button in the grid layout
 
     execute_csv_button = Button(root, command=lambda:execute_csv_btn(root), text="Execute .csv", bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to add tasks ro selected csv
-    execute_csv_button.grid(row=2, column=4, padx=10, pady=10) # Place the button in the grid layout
+    execute_csv_button.grid(row=2, column=3, padx=10, pady=10) # Place the button in the grid layout
 
     source_button = Button(root, text = "Select Source File", command=lambda:open_source_file(root))
     source_button.grid(row=6, column=3, padx=10, pady=10) # Place the button in the grid layout
 
     destination_button = Button(root, text = "Select Destination Location", command=lambda:open_destination_folder(root))
     destination_button.grid(row=7, column=3, padx=10, pady=10) # Place the button in the grid layout
+
+    # Frame for the output box and its scrollbar
+    output_frame = Frame(root)
+    output_frame.grid(row=10, column=0, columnspan=5, padx=10, pady=10, sticky="nsew")
+
+    # Scrollbar
+    scrollbar = Scrollbar(output_frame)
+    scrollbar.pack(side=RIGHT, fill=Y)
+
+    # Output Text box
+    output_box = Text(output_frame, height=6, bg="white", fg="black", font=("Arial", 13), yscrollcommand=scrollbar.set, wrap=WORD)
+    output_box.pack(side=LEFT, fill=BOTH, expand=True)
+
+    scrollbar.config(command=output_box.yview)
+
+    # Log function
+    def log_output(msg):
+        output_box.config(state=NORMAL)
+        output_box.insert(END, f"{msg}\n")
+        output_box.see(END) 
+        output_box.config(state=DISABLED)
+
+    root.log_output = log_output
 
     root.mainloop() # Place window on screen and wait for user interaction
