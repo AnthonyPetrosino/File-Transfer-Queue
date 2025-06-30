@@ -17,7 +17,7 @@ def main():
             execute_scheduled_tasks('sftptasks.csv')
 
             print("Task execution completed. Exiting.")
-            time.sleep(5)  # Wait before exiting
+            # time.sleep(5)  # Wait before exiting
             return
 
         # Interactive command line mode

@@ -3,6 +3,7 @@ from tkinter import *
 from tkinter.ttk import Treeview
 from tkinter import filedialog, messagebox
 from task_manager import create_task, remove_task
+from task_executor import execute_scheduled_tasks_root
 
 def show_csv(root, selected_csv_file):
     # Function to display the selected CSV file
@@ -97,9 +98,15 @@ def clear_csv_btn(root):
         root.log_output("No CSV file loaded to clear.")
 
 def execute_csv_btn(root):
-    # Function to add a task to the queue
-    root.log_output("Execute functionality not implemented.")
+    # Function to execute the selected csv
+    selected_file = root.selected_csv.get()
+    root.log_output(f"Executing tasks from {selected_file}...")
 
+    try:
+        execute_scheduled_tasks_root(root, selected_file)
+        root.log_output(f"Finished executing tasks from {selected_file}.")
+    except Exception as e:
+        root.log_output(f"Error executing tasks: {e}")
 
 def open_source_file(root):
     # Function to open the source file path
