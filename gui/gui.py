@@ -1,6 +1,5 @@
 from tkinter import *
-from button_functions import show_csv, remove_task_btn, clear_csv_btn, execute_csv_btn, open_source_file, open_destination_folder
-from task_manager import create_task, remove_task
+from button_functions import show_csv, remove_task_btn, clear_csv_btn, execute_csv_btn, open_source_file, open_destination_folder, create_task_btn
 
 root = Tk() # Instantiate the main window
 
@@ -41,6 +40,11 @@ def start_gui():
 
     destination_button = Button(root, text = "Select Destination Location", command=lambda:open_destination_folder(root))
     destination_button.grid(row=7, column=3, padx=10, pady=10) # Place the button in the grid layout
+
+    cmd = "hi"
+
+    add_task_button = Button(root, text="Add Task", command=lambda:create_task_btn(root, selected_csv.get()), bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to add task to selected csv
+    add_task_button.grid(row=8, column=3, padx=10, pady=10)
 
     # Frame for the output box and its scrollbar
     output_frame = Frame(root)

@@ -55,6 +55,3 @@ Timestamp,Command
 2025-06-16 22:19,sftp upload <local_path> <user>@<host>:<password>:<remote_path>
 2025-06-16 22:19,sftp upload <local_path> <user>@<host>:<password>:<remote_path>
 2025-06-16 22:19,sftp upload <local_path> <user>@<host>:<password>:<remote_path>
-2025-06-16 22:19,sftp upload <local_path> <user>@<host>:<password>:<remote_path>
-2025-06-16 22:19,sftp upload <local_path> <user>@<host>:<password>:<remote_path>
-2025-06-16 22:19,sftp upload <local_path> <user>@<host>:<password>:<remote_path>

@@ -3,15 +3,9 @@ import csv
 import os
 from datetime import datetime
 
-def create_task(cmd):
+def create_task(cmd, selected_csv_file, root):
     # Record the current timestamp
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-
-    # Determine the kind of task
-    if cmd.split()[0].lower() == 'sftp':
-        selected_csv_file = 'sftptasks.csv'
-    else:
-        selected_csv_file = 'localtasks.csv'
 
     # Create the tasks.csv file if it does not exist
     if not os.path.exists(selected_csv_file):
@@ -25,7 +19,7 @@ def create_task(cmd):
         writer.writerow(['Timestamp','Command'])
     writer.writerow([timestamp, cmd])
 
-    print(f"New task added: {cmd}")
+    root.log_output(f"New task added to {selected_csv_file}")
 
 def remove_task(root, task_id, selected_csv_file):
     try:
@@ -34,8 +28,7 @@ def remove_task(root, task_id, selected_csv_file):
         rows = list(reader)
 
         if len(rows) <= 1:
-            remove_task_result = Label(root, text=f"{selected_csv_file} is empty.", bg='white', fg='#ba0e0e', font=("Arial", 14))
-            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+            root.log_output(f"{selected_csv_file} is empty.")
             return
 
         if 0 <= task_id < len(rows) - 1:
@@ -44,9 +37,7 @@ def remove_task(root, task_id, selected_csv_file):
             writer.writerows(rows)
 
     except FileNotFoundError:
-            remove_task_result = Label(root, text=f"{selected_csv_file} not found.", bg='white', fg='#ba0e0e', font=("Arial", 14))
-            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+            root.log_output(f"{selected_csv_file} not found.")
     except Exception as e:
-            remove_task_result = Label(root, text=f"Error removing task:{e}.", bg='white', fg='#ba0e0e', font=("Arial", 14))
-            remove_task_result.grid(row=3, column=0, columnspan=5, padx=10, pady=10)
+            root.log_output(f"Error removing task:{e}.")
     return
