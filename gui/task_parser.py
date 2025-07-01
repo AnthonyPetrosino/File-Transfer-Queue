@@ -1,7 +1,8 @@
 # Parse user input
+import shlex
 
 def parse_cmd(cmd: str):
-    tokens = cmd.strip().split()
+    tokens = shlex.split(cmd.strip())
     task = tokens[0].lower()
 
     # Check for move or copy commands

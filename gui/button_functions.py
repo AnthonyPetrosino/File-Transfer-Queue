@@ -4,6 +4,7 @@ from tkinter.ttk import Treeview, Combobox
 from tkinter import filedialog, messagebox
 from task_manager import create_task, remove_task
 from task_executor import execute_scheduled_tasks_root
+import shlex
 
 def show_csv(root, selected_csv_file):
     # Function to display the selected CSV file
@@ -54,6 +55,7 @@ def show_csv(root, selected_csv_file):
                 local_task_type_dropdown['values'] = ("Move", "Copy")
                 local_task_type_dropdown.grid(row=8, column=0, padx=10, pady=10)
                 local_task_type_dropdown.set("Move")
+                root.task_type_var = local_task_type_var  # Store the StringVar in root
             elif selected_csv_file == "sftptasks.csv":
                 sftp_task_type_var = StringVar()
                 sftp_task_type_dropdown = Combobox(root, textvariable=sftp_task_type_var, state="readonly", font=("Arial", 12))
@@ -65,9 +67,26 @@ def show_csv(root, selected_csv_file):
         root.log_output(f"Error: {selected_csv_file} not found.")
 
 def create_task_btn(root, selected_csv_file):
-    cmd = "hi"
-    create_task(cmd, selected_csv_file=selected_csv_file, root=root)
-    show_csv(root, selected_csv_file)
+    # Check if source and destination paths are selected
+    if not hasattr(root, 'source_path') or not root.source_path:
+        root.log_output("Please select a source file first.")
+        return
+    if not hasattr(root, 'destination_path') or not root.destination_path:
+        root.log_output("Please select a destination folder first.")
+        return
+
+    # Get the selected task type (move/copy upload/download)
+    task_type = root.task_type_var.get().lower()
+
+    # Quote paths to handle spaces correctly, resolves parsing error
+    quoted_source_path = shlex.quote(root.source_path)
+    quoted_destination_path = shlex.quote(root.destination_path)
+
+    if selected_csv_file == "localtasks.csv":
+        # Construct the command string
+        cmd = f"{task_type} {quoted_source_path} {quoted_destination_path}"
+        create_task(cmd, selected_csv_file=selected_csv_file, root=root)
+        show_csv(root, selected_csv_file)
 
 def remove_task_btn(root, selected_csv_file):
     # Function to remove a task from the queue
@@ -117,11 +136,13 @@ def execute_csv_btn(root):
 def open_source_file(root):
     # Function to open the source file path
     root.filename = filedialog.askopenfilename(initialdir="/", title="Select a file")
+    root.source_path = root.filename
     source_file_result = Label(root, text=root.filename)
     source_file_result.grid(row=6, column=0, padx=10, pady=10)
 
 def open_destination_folder(root):
     # Function to open the destination folder path
     root.filename = filedialog.askdirectory(initialdir="/", title="Select destination folder")
+    root.destination_path = root.filename
     destination_file_result = Label(root, text=root.filename)
     destination_file_result.grid(row=7, column=0, padx=10, pady=10)

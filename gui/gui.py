@@ -4,7 +4,7 @@ from button_functions import show_csv, remove_task_btn, clear_csv_btn, execute_c
 root = Tk() # Instantiate the main window
 
 def start_gui():
-    root.geometry("850x700") # Set the size of the window
+    root.geometry("800x700") # Set the size of the window
     root.title("File Transfer Queue GUI") # Set the title of the window
 
     logo = PhotoImage(file='images/leaderbank_logo.png') # Load logo image
@@ -41,7 +41,13 @@ def start_gui():
     destination_button = Button(root, text = "Select Destination Location", command=lambda:open_destination_folder(root))
     destination_button.grid(row=7, column=3, padx=10, pady=10) # Place the button in the grid layout
 
-    cmd = "hi"
+    # Store source and destination paths as attributes of root
+    root.source_path = None
+    root.destination_path = None
+
+    # Store task type as an attribute of root
+    root.task_type_var = StringVar()
+    root.task_type_var.set("Move")
 
     add_task_button = Button(root, text="Add Task", command=lambda:create_task_btn(root, selected_csv.get()), bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to add task to selected csv
     add_task_button.grid(row=8, column=3, padx=10, pady=10)
