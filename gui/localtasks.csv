@@ -1,5 +1,3 @@
 Timestamp,Command
 2025-06-16 20:07,move test.txt test1.txt
 2025-06-16 20:07,copy test1.txt test.txt
-2025-06-30 23:28,hi
-2025-07-01 00:42,move 'C:/Users/apetr/OneDrive/Documents/GitHub/Leader Bank Projects/File-Transfer-Queue/gui/test.txt' 'C:/Users/apetr/OneDrive/Documents/GitHub/Leader Bank Projects/File-Transfer-Queue'

@@ -8,15 +8,11 @@ def start_gui():
     root.title("File Transfer Queue GUI") # Set the title of the window
 
     logo = PhotoImage(file='images/leaderbank_logo.png') # Load logo image
-    # photo = PhotoImage(file='images/red_stars.png') # Load red stars image
 
     root.iconphoto(True, logo) # Set the icon of the window
     root.configure(bg='white') # Set the background color of the window
 
     header = Label(root, text="File Transfer Queue", font=("Arial", 24), bg='white', fg="#ba0e0e", padx=10, pady=10, compound=RIGHT) # Create a label with the title
-
-    #header.pack(pady=20) # Add some padding and place the label in the window
-    #header.place(x=0, y=0) # For absolute positioning
     header.grid(row=0, column=0, rowspan=2, columnspan=2, padx=10, pady=10) # Use grid layout for the label 
 
     selected_csv = StringVar() # Create a StringVar to hold the selected CSV file
@@ -35,9 +31,15 @@ def start_gui():
     execute_csv_button = Button(root, command=lambda:execute_csv_btn(root), text="Execute .csv", bg="#ba0e0e", fg="white", font=("Arial", 14), padx=10) # Create a button to add tasks ro selected csv
     execute_csv_button.grid(row=2, column=3, padx=10, pady=10) # Place the button in the grid layout
 
+    # Source Path
+    root.source_entry = Entry(root, width=80, bd=2, relief="groove")
+    root.source_entry.grid(row=6, column=0, columnspan=2, padx=10, pady=10)
     source_button = Button(root, text = "Select Source File", command=lambda:open_source_file(root))
     source_button.grid(row=6, column=3, padx=10, pady=10) # Place the button in the grid layout
 
+    # Destination Path
+    root.destination_entry = Entry(root, width=80, bd=2, relief="groove")
+    root.destination_entry.grid(row=7, column=0, columnspan=2, padx=10, pady=10)
     destination_button = Button(root, text = "Select Destination Location", command=lambda:open_destination_folder(root))
     destination_button.grid(row=7, column=3, padx=10, pady=10) # Place the button in the grid layout
 

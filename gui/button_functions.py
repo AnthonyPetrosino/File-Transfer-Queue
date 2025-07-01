@@ -67,12 +67,13 @@ def show_csv(root, selected_csv_file):
         root.log_output(f"Error: {selected_csv_file} not found.")
 
 def create_task_btn(root, selected_csv_file):
-    # Check if source and destination paths are selected
-    if not hasattr(root, 'source_path') or not root.source_path:
-        root.log_output("Please select a source file first.")
+    source_path = root.source_entry.get()
+    destination_path = root.destination_entry.get()
+    if not source_path:
+        root.log_output("Please select or enter a source file.")
         return
-    if not hasattr(root, 'destination_path') or not root.destination_path:
-        root.log_output("Please select a destination folder first.")
+    if not destination_path:
+        root.log_output("Please select or enter a destination folder.")
         return
 
     # Get the selected task type (move/copy upload/download)
@@ -135,14 +136,16 @@ def execute_csv_btn(root):
 
 def open_source_file(root):
     # Function to open the source file path
-    root.filename = filedialog.askopenfilename(initialdir="/", title="Select a file")
-    root.source_path = root.filename
-    source_file_result = Label(root, text=root.filename)
-    source_file_result.grid(row=6, column=0, padx=10, pady=10)
+    filename = filedialog.askopenfilename(initialdir="/", title="Select a file")
+    if filename:
+        root.source_path = filename
+        root.source_entry.delete(0, END)
+        root.source_entry.insert(0, filename)
 
 def open_destination_folder(root):
     # Function to open the destination folder path
-    root.filename = filedialog.askdirectory(initialdir="/", title="Select destination folder")
-    root.destination_path = root.filename
-    destination_file_result = Label(root, text=root.filename)
-    destination_file_result.grid(row=7, column=0, padx=10, pady=10)
+    foldername = filedialog.askdirectory(initialdir="/", title="Select destination folder")
+    if foldername:
+        root.destination_path = foldername
+        root.destination_entry.delete(0, END)
+        root.destination_entry.insert(0, foldername)
