@@ -1,0 +1,45 @@
+Metadata-Version: 2.4
+Name: file-transfer-queue
+Version: 0.1.0
+Summary: A Python app for automating file transfers between local and remote locations.
+Author: Anthony Petrosino
+Project-URL: Homepage, https://github.com/anthonypetrosino/file-transfer-queue
+Requires-Python: >=3.12
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: altgraph==0.17.4
+Requires-Dist: bcrypt==4.3.0
+Requires-Dist: cffi==1.17.1
+Requires-Dist: colorama==0.4.6
+Requires-Dist: cryptography==45.0.3
+Requires-Dist: iniconfig==2.1.0
+Requires-Dist: packaging==25.0
+Requires-Dist: paramiko==3.5.1
+Requires-Dist: pefile==2023.2.7
+Requires-Dist: pluggy==1.6.0
+Requires-Dist: pycparser==2.22
+Requires-Dist: Pygments==2.19.1
+Requires-Dist: pyinstaller==6.14.1
+Requires-Dist: pyinstaller-hooks-contrib==2025.5
+Requires-Dist: PyNaCl==1.5.0
+Requires-Dist: pytest==8.4.0
+Requires-Dist: pywin32-ctypes==0.2.3
+Requires-Dist: schedule==1.2.2
+Dynamic: license-file
+
+# File Transfer Queue
+This is a Python app that automates manipulating files between local drives, network drives and SFTP-accessible servers. Made for internal use to improve team efficiency.
+
+## To run:
+There are two primary ways to run this application.
+
+## 1. Interactive Terminal Mode
+* This mode allows you to add, list, and manage file transfer tasks in real-time.
+* Open your terminal, navigate to the cli directory within the project, and run the following command: python cli.py
+* The application will start and display a > prompt, waiting for your commands.
+
+## 2. Execution Mode
+* This mode is designed to be run automatically by your operating system's task scheduler (like Windows Task Scheduler or cron). It executes all the tasks you have scheduled in the csv file.
+* The command to execute all scheduled tasks is: python cli.py 1
+* This can be done in your terminal or in your task scheduler.
+* When the script is run with the argument 1, it processes each task in the csv file and then exits.

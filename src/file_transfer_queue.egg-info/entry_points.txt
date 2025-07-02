@@ -1,0 +1,3 @@
+[console_scripts]
+file-transfer-cli = cli.cli:main
+file-transfer-gui = gui.main:main
