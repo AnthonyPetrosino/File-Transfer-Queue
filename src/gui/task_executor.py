@@ -1,8 +1,8 @@
 from tkinter import *
 import csv
 import time
-from file_ops import run_file_ops
-from task_parser import parse_cmd
+from .file_ops import run_file_ops
+from .task_parser import parse_cmd
 
 def execute_scheduled_tasks_root(root, selected_csv_file):
         # Read and execute tasks from the given CSV file

@@ -1,5 +1,6 @@
 from tkinter import *
-from button_functions import show_csv, remove_task_btn, clear_csv_btn, execute_csv_btn, open_source_file, open_destination_folder, create_task_btn
+from .button_functions import show_csv, remove_task_btn, clear_csv_btn, execute_csv_btn, open_source_file, open_destination_folder, create_task_btn
+import os
 
 root = Tk() # Instantiate the main window
 
@@ -7,8 +8,10 @@ def start_gui():
     root.geometry("800x700") # Set the size of the window
     root.title("File Transfer Queue GUI") # Set the title of the window
 
-    logo = PhotoImage(file='images/leaderbank_logo.png') # Load logo image
-
+    BASE_DIR = os.path.dirname(__file__)  # gets path to src/gui
+    image_path = os.path.join(BASE_DIR, "images", "leaderbank_logo.png")
+    logo = PhotoImage(file=image_path) 
+    
     root.iconphoto(True, logo) # Set the icon of the window
     root.configure(bg='white') # Set the background color of the window
 

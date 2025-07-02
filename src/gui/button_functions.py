@@ -2,8 +2,8 @@ import csv
 from tkinter import *
 from tkinter.ttk import Treeview, Combobox
 from tkinter import filedialog, messagebox
-from task_manager import create_task, remove_task
-from task_executor import execute_scheduled_tasks_root
+from .task_manager import create_task, remove_task
+from .task_executor import execute_scheduled_tasks_root
 import shlex
 
 def show_csv(root, selected_csv_file):

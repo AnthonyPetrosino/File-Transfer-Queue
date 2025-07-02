@@ -1,10 +1,11 @@
 # Intro project
 # Task Scheduler: Get task scheduler to run this script at intervals
 import sys
-from task_executor import execute_scheduled_tasks
-from gui import start_gui
+from .task_executor import execute_scheduled_tasks
+from .gui import start_gui
 
 def main():
+    start_gui()
     try:
         # Task execution mode
         if len(sys.argv) == 2 and int(sys.argv[1]) == 1:
@@ -21,9 +22,9 @@ def main():
             start_gui()
 
         else: 
-            print("Error: Valid arguments are main.py and main.py 1")
+            print(sys.argv[0])
     except Exception as e:
-        print("Error: Valid arguments are main.py and main.py 1")
+        print(f"Error: {e}")
 
 if __name__ == "__main__":
     main()
