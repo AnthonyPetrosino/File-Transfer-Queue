@@ -1,4 +1,4 @@
-# File Transfer Queue
+# WIP File Transfer Queue
 This is a Python app that automates manipulating files between local drives, network drives and SFTP-accessible servers. Made for internal use to improve team efficiency.
 
 ## To run:
